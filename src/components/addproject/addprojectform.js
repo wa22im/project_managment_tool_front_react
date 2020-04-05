@@ -1,72 +1,159 @@
 import React, { Component } from "react";
-import { Button, Form, Grid, Header, Segment } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Segment,
+  Message,
+} from "semantic-ui-react";
+import Proptypes from "prop-types";
+import { connect } from "react-redux";
+import { createProject } from "../../redux/action/projectActions";
+import { withRouter } from "react-router-dom";
 
 class CreateProjectFrom extends Component {
   state = {
-    isLoading : false , 
-    projectname: "",
-    projectId: "",
-    description: "",
+    errorProjectNamecontent: {
+      content: "please entre a valid project name ",
+      pointing: "below",
+    },
+    errorProjectIdcontent: {
+      content: "Please enter the project Id ",
+      pointing: "below",
+    },
+    errordiscriptioncontent: {
+      content: "Please enter discription to your project",
+      pointing: "below",
+    },
+    errorstarDatecontent: {
+      content: "a starting date must not be passed",
+      pointing: "below",
+    },
+    errorfinishDatecontent: {
+      content: "a starting date must not be passed",
+      pointing: "below",
+    },
+    errorProjectId: false,
+    errordiscription: false,
+    errorstarDate: false,
+    errorfinishDate: false,
+    errorProjectNamebool: false,
 
-    starDateStr: "",
-    finishDateStr: ""
+    isLoading: false,
+    projectName: "",
+    projectId: "",
+    discription: "",
+
+    starDate: "",
+    finishDate: "",
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     console.log([event.target.name], event.target.value);
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
   isValide = () => {
     const {
-      projectname,
+      projectName,
       projectId,
-      description,
-      starDateStr,
-      finishDateStr
+      discription,
+      starDate,
+      finishDate,
     } = this.state;
 
-    return (
-      projectname && projectId && description && starDateStr && finishDateStr
-    );
+    if (!projectName) this.setState({ errorProjectName: true });
+    if (!projectId) this.setState({ errorProjectIde: true });
+    if (!discription) this.setState({ errordiscription: true });
+    if (!starDate) this.setState({ errorstarDate: true });
+    if (!finishDate) this.setState({ errorfinishDate: true });
+
+    return projectName && projectId && discription && starDate && finishDate;
   };
 
   checkdate = () => {
-    return new Date() < new Date(this.state.starDateStr);
+    return (
+      new Date() <= new Date(this.state.starDate) &&
+      new Date(this.state.starDate) < new Date(this.state.finishDate)
+    );
   };
   handleSubmit = () => {
+    let error;
+    let errors = {};
     this.setState({
-      isLoading:true
-    })
+      isLoading: true,
+    });
     if (this.isValide()) {
-      if (this.checkdate()) {console.log(this.state);
       this.setState({
-        isLoading:false
+        errorProjectName: false,
+        errorProjectIde: false,
+        errordiscription: false,
+        errorstarDate: false,
+        errorfinishDate: false,
+      });
 
-      })}
-      else {console.log(this.state);
+      if (this.checkdate()) {
+        const {
+          projectName,
+          projectId,
+          discription,
+          starDate,
+          finishDate,
+        } = this.state;
+        const project = {
+          projectName,
+          projectId,
+          discription,
+          starDate,
+          finishDate,
+        };
+        this.props.createProject(project, this.props.history);
         this.setState({
-          isLoading:false
-  
-        })};
-    } else {console.log(this.state);
-      this.setState({
-        isLoading:false
+          isLoading: false,
+          errors: [],
+        });
+      } else {
+        error = { error: " please provide a valid date " };
+        this.setState({
+          Formerrors: error,
 
-      })};
+          isLoading: false,
+        });
+      }
+    } else {
+      error = { error: " form invalid" };
+
+      this.setState({
+        Formerrors: error,
+        isLoading: false,
+      });
+    }
   };
 
   render() {
     const {
-      projectname,
+      projectName,
       projectId,
-      description,
-      starDateStr,
-      finishDateStr,
-      isLoading
+      discription,
+      starDate,
+      finishDate,
+      isLoading,
+      errorProjectIdcontent,
+      errordiscriptioncontent,
+      errorstarDatecontent,
+      errorfinishDatecontent,
+      errorProjectNamebool,
+      errorProjectName,
+      errorProjectId,
+      errordiscription,
+      errorProjectNamecontent,
+      errorstarDate,
+      errorfinishDate,
     } = this.state;
+    const { errors } = this.props;
     return (
       <Grid
         textAlign="center"
@@ -77,14 +164,16 @@ class CreateProjectFrom extends Component {
           <Header as="h2" textAlign="center">
             Create A new Project !!
           </Header>
-          <Form
-          loading={isLoading}
+          {errors !== undefined ? this.showErrors : ""}
+          <Form loading={isLoading} 
+          error ={errors !== undefined? true : false }
           onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
               <Form.Input
                 fluid
-                name={"projectname"}
-                value={projectname}
+                error={errorProjectName ? errorProjectNamecontent : false}
+                name={"projectName"}
+                value={projectName}
                 onChange={this.handleChange}
                 icon="add square"
                 iconPosition="left"
@@ -92,6 +181,7 @@ class CreateProjectFrom extends Component {
               />
 
               <Form.Input
+                error={projectId ? errorProjectIdcontent : false}
                 fluid
                 icon="key"
                 iconPosition="left"
@@ -102,10 +192,11 @@ class CreateProjectFrom extends Component {
               />
 
               <Form.Input
-                placeholder="add description"
+                error={errordiscription ? errordiscriptioncontent : false}
+                placeholder="add discription"
                 height={6}
-                name={"description"}
-                value={description}
+                name={"discription"}
+                value={discription}
                 onChange={this.handleChange}
               />
               <Form.Field>
@@ -117,8 +208,8 @@ class CreateProjectFrom extends Component {
                   iconPosition="left"
                   placeholder="start date"
                   type="date"
-                  name={"starDateStr"}
-                  value={starDateStr}
+                  name={"starDate"}
+                  value={starDate}
                   onChange={this.handleChange}
                 />
               </Form.Field>
@@ -131,8 +222,8 @@ class CreateProjectFrom extends Component {
                   iconPosition="left"
                   placeholder="finish date"
                   type="date"
-                  name={"finishDateStr"}
-                  value={finishDateStr}
+                  name={"finishDate"}
+                  value={finishDate}
                   onChange={this.handleChange}
                 />
               </Form.Field>
@@ -145,6 +236,13 @@ class CreateProjectFrom extends Component {
               >
                 Login
               </Button>
+              <Message
+                error
+                header="Action Forbidden"
+                content={
+                 this.props.errors
+                }
+              />
             </Segment>
           </Form>
         </Grid.Column>
@@ -153,4 +251,13 @@ class CreateProjectFrom extends Component {
   }
 }
 
-export default CreateProjectFrom;
+CreateProjectFrom.propTypes = {
+  createProject: Proptypes.func.isRequired,
+  errors: Proptypes.object.isRequired,
+};
+const mapStateToProps = (state) => ({
+  errors: state.errors.errors,
+});
+export default withRouter(
+  connect(mapStateToProps, { createProject })(CreateProjectFrom)
+);

@@ -9,8 +9,8 @@ class CreateNewProjectBtn extends Component {
   render() {
     return (
       <React.Fragment>
-        <Link to="/addprojec">
-          <Button as="a" size="huge" primary>
+        <Link to="/addproject">
+          <Button as="h3" size="huge" primary>
             Create New Projct
           </Button>
         </Link>
