@@ -4,7 +4,10 @@ combineReducers
 from 'redux'
 import errorReducer from './errorReducer'
 import projectReducer from './projectReducer'
+import backlogReducer from './backlogreducer'
+
 export default combineReducers({
     errors : errorReducer,
-    project : projectReducer 
+    project : projectReducer ,
+    backlog :backlogReducer 
 })

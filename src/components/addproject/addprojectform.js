@@ -12,6 +12,8 @@ import { connect } from "react-redux";
 import { createProject } from "../../redux/action/projectActions";
 import { withRouter } from "react-router-dom";
 
+import "react-datepicker/dist/react-datepicker.css";
+
 class CreateProjectFrom extends Component {
   state = {
     errorProjectNamecontent: {
@@ -20,7 +22,7 @@ class CreateProjectFrom extends Component {
     },
     errorProjectIdcontent: {
       content: "Please enter the project Id ",
-      pointing: "below",
+      pointing: "left",
     },
     errordiscriptioncontent: {
       content: "Please enter discription to your project",
@@ -45,12 +47,11 @@ class CreateProjectFrom extends Component {
     projectId: "",
     discription: "",
 
-    starDate: "",
+    starDate: new Date().toISOString().slice(0, 10),
     finishDate: "",
   };
 
   handleChange = (event) => {
-    console.log([event.target.name], event.target.value);
     this.setState({
       [event.target.name]: event.target.value,
     });
@@ -141,17 +142,6 @@ class CreateProjectFrom extends Component {
       starDate,
       finishDate,
       isLoading,
-      errorProjectIdcontent,
-      errordiscriptioncontent,
-      errorstarDatecontent,
-      errorfinishDatecontent,
-      errorProjectNamebool,
-      errorProjectName,
-      errorProjectId,
-      errordiscription,
-      errorProjectNamecontent,
-      errorstarDate,
-      errorfinishDate,
     } = this.state;
     const { errors } = this.props;
     return (
@@ -165,13 +155,20 @@ class CreateProjectFrom extends Component {
             Create A new Project !!
           </Header>
           {errors !== undefined ? this.showErrors : ""}
-          <Form loading={isLoading} 
-          error ={errors !== undefined? true : false }
-          onSubmit={this.handleSubmit} size="large">
-            <Segment stacked>
+          <Form
+            style={{
+              textAlign: "left",
+              width: "100vw",
+            }}
+            loading={isLoading}
+            error={errors !== undefined ? true : false}
+            onSubmit={this.handleSubmit}
+            size="large"
+          >
+            <Segment fluid stacked>
               <Form.Input
-                fluid
-                error={errorProjectName ? errorProjectNamecontent : false}
+                required
+                inverted
                 name={"projectName"}
                 value={projectName}
                 onChange={this.handleChange}
@@ -181,7 +178,7 @@ class CreateProjectFrom extends Component {
               />
 
               <Form.Input
-                error={projectId ? errorProjectIdcontent : false}
+                required
                 fluid
                 icon="key"
                 iconPosition="left"
@@ -191,10 +188,9 @@ class CreateProjectFrom extends Component {
                 onChange={this.handleChange}
               />
 
-              <Form.Input
-                error={errordiscription ? errordiscriptioncontent : false}
+              <Form.TextArea
                 placeholder="add discription"
-                height={6}
+                row={3}
                 name={"discription"}
                 value={discription}
                 onChange={this.handleChange}
@@ -206,7 +202,7 @@ class CreateProjectFrom extends Component {
                   labelPosition="left"
                   icon="write square"
                   iconPosition="left"
-                  placeholder="start date"
+                  placeholder="start date (mm-dd-yyyy)"
                   type="date"
                   name={"starDate"}
                   value={starDate}
@@ -220,7 +216,7 @@ class CreateProjectFrom extends Component {
                   labelPosition="right"
                   icon="write square"
                   iconPosition="left"
-                  placeholder="finish date"
+                  placeholder="finish date (mm-dd-yyyy)"
                   type="date"
                   name={"finishDate"}
                   value={finishDate}
@@ -234,14 +230,12 @@ class CreateProjectFrom extends Component {
                 fluid
                 size="large"
               >
-                Login
+                Create project
               </Button>
               <Message
                 error
                 header="Action Forbidden"
-                content={
-                 this.props.errors
-                }
+                content={this.props.errors}
               />
             </Segment>
           </Form>

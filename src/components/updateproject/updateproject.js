@@ -28,8 +28,8 @@ class UpdateProjectFrom extends Component {
           projectName: this.props.project.projectName,
           projectId: this.props.project.projectId,
           discription: this.props.project.discription,
-          starDate: this.props.project.starDate,
-          finishDate: this.props.project.finishDate,
+          starDate: this.props.project.starDate.slice(0,10),
+          finishDate: this.props.project.finishDate.slice(0,10),
         },
         () => {
           this.setState({
@@ -198,7 +198,7 @@ UpdateProjectFrom.propTypes = {
   project: Proptypes.object.isRequired,
 };
 const mapStateToProps = (state) => ({
-  project: state.project.project,
+  project: state.backlog.projects,
 });
 export default withRouter(
   connect(mapStateToProps, { updateProject, getProject })(UpdateProjectFrom)

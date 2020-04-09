@@ -5,7 +5,7 @@ import * as actionTypes from "./types";
 export const getProject =(projectId)=> async (dispatch)=>{
   try {
 
-    const res = await axios.get(`http://127.0.0.1:8080/api/project/${projectId}`);
+    const res = await axios.get(`/api/project/${projectId}`);
 
     dispatch({
       type : actionTypes.GET_PROJECT , 
@@ -22,7 +22,7 @@ export const getProject =(projectId)=> async (dispatch)=>{
 }
 export const updateProject = (project, id,history) => async (dispatch) => {
   try {
-    await axios.put(`http://127.0.0.1:8080/api/project/${id}`, project);
+    await axios.put(`/api/project/${id}`, project);
 
     history.push("/dashboard");
   } catch (err) {
@@ -38,7 +38,7 @@ export const updateProject = (project, id,history) => async (dispatch) => {
 
 export const createProject = (project, history) => async (dispatch) => {
   try {
-    await axios.post("http://127.0.0.1:8080/api/project", project);
+    await axios.post("/api/project", project);
 
     history.push("/dashboard");
   } catch (err) {
@@ -52,7 +52,7 @@ export const createProject = (project, history) => async (dispatch) => {
 export const getProjects =()=> async (dispatch)=>{
   try {
 
-    const res = await axios.get("http://127.0.0.1:8080/api/project/all");
+    const res = await axios.get("/api/project/all");
 
     dispatch({
       type : actionTypes.GET_PROJECTS , 
@@ -73,7 +73,7 @@ export const getProjects =()=> async (dispatch)=>{
 export const deleteProject =(projectId)=> async (dispatch)=>{
   try {
 
-    const res = await axios.delete(`http://127.0.0.1:8080/api/project/${projectId}`);
+    const res = await axios.delete(`/api/project/${projectId}`);
 
 
   } 
