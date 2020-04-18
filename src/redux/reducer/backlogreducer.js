@@ -22,8 +22,9 @@ const backlogReducer  = (state = initState , action) =>{
         }
         case actionTypes.DELETE_PROJECT_TASK : 
         return {
-            ...state 
-            //TO DO 
+            ...state  , 
+            project_tasks : action.payload, 
+            project_task : {} , 
         }
     
         default:

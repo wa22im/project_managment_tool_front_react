@@ -43,7 +43,6 @@ class ProjectBoard extends Component {
           {this.props.project_tasks.map((project, index) => {
             if (project.status == "TO DO")
               return <ProjectTask
-              deletetask = {this.props.deleteProjectTask}
               backlog_id={this.state.id}              
               project={project} />;
           })}
@@ -53,8 +52,6 @@ class ProjectBoard extends Component {
           {this.props.project_tasks.map((project, index) => {
             if (project.status == "EN PROGRESS")
               return <ProjectTask project={project}  
-              deletetask = {this.props.deleteProjectTask}
-
               backlog_id={this.state.id}   
 
               />;
@@ -65,8 +62,6 @@ class ProjectBoard extends Component {
           {this.props.project_tasks.map((project, index) => {
             if (project.status == "DONE")
               return <ProjectTask  
-              deletetask = {this.props.deleteProjectTask}
-
               backlog_id={this.state.id}              
               project={project} />;
           })}

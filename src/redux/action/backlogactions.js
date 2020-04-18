@@ -49,15 +49,19 @@ export const updateProjectTask = (backlog_id , projecttaskid, project_task )=> a
 export const deleteProjectTask = (backlog_id , projecttaskid, history)=> async dispatch=>{
 
     try{
-    await axios.put(`/api/backlog/${backlog_id}/${projecttaskid}`) ; 
+   const res= await axios.delete(`/api/backlog/${backlog_id}/${projecttaskid}`) ; 
     history.push(`/projectboard/${backlog_id}`)
+    dispatch ({
+        type:actionTypes.DELETE_PROJECT_TASK , 
+        payload : res.data
+    })
     }
     catch(err){ 
-        console.log(err.response.data)
+       /* console.log(err.response.data)
         dispatch({
             type: actionTypes.GET_ERRORS,
             payload: err.response.data.message,
-          });
+          });*/
     }
 }
 
